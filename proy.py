@@ -6,6 +6,10 @@ import tensorflow as tf
 from tensorflow import keras
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import confusion_matrix, classification_report
+import seaborn as sns
+import ace_tools as tools
+
 
 # Crear grafo dirigido
 G = nx.DiGraph()
@@ -21,6 +25,7 @@ edges = [
     ("C", "D", {"latency": 15, "bandwidth": 20}),
     ("D", "E", {"latency": 10, "bandwidth": 60}),
 ]
+
 G.add_edges_from(edges)
 
 # Visualizar la red
@@ -52,7 +57,7 @@ congestion = congestion.astype(int)  # Convertir a 0 y 1
 df = pd.DataFrame({"Bandwidth_Used": bandwidth_used, "Latency": latency, "Packet_Loss": packet_loss, "Congestion": congestion})
 
 # Mostrar datos
-import ace_tools as tools
+
 tools.display_dataframe_to_user(name="Datos de tráfico de red", dataframe=df)
 
 # Separar features y labels
@@ -87,8 +92,7 @@ print(f"Precisión en datos de prueba: {test_acc:.2f}")
 predictions = (model.predict(X_test) > 0.5).astype(int)
 
 # Matriz de confusión
-from sklearn.metrics import confusion_matrix, classification_report
-import seaborn as sns
+
 
 conf_matrix = confusion_matrix(y_test, predictions)
 sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues", xticklabels=["No Congestión", "Congestión"], yticklabels=["No Congestión", "Congestión"])
